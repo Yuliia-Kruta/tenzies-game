@@ -1,21 +1,34 @@
+import { useState } from "react";
 import Tile from "./components/Tile";
 
 
 function App() {
+
+const [diceNumbers, setDiceNumbers] = useState(newDices())
+
+  function newDices(){
+    const newDicesArr = []
+    for(let i=0; i<10; i++){
+      newDicesArr.push({value: Math.floor(Math.random()*6)+1, isHeld: false})
+    }
+    return newDicesArr
+  }
+
+  function setNewDices(){
+    setDiceNumbers(newDices())
+  }
+
+  const tileElements = diceNumbers.map((diceNum, index) => {
+    return <Tile key={index} value={diceNum.value} />
+  })
+  
+
   return(
     <main>
       <div className="tile-container">
-        <Tile value={1} />
-        <Tile value={3} />
-        <Tile value={2}/>
-        <Tile value={5}/>
-        <Tile value={3}/>
-        <Tile value={4}/>
-        <Tile value={6}/>
-        <Tile value={2}/>
-        <Tile value={3}/>
-        <Tile value={6}/>
+        {tileElements}
       </div>
+      <button className="roll-button" onClick={setNewDices}>Roll</button>
     </main>
   );
 }

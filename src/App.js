@@ -6,20 +6,32 @@ function App() {
 
 const [diceNumbers, setDiceNumbers] = useState(newDices())
 
+  function generateNewDice(){
+    return {value: Math.floor(Math.random()*6)+1, isHeld: false}
+  }
+
   function newDices(){
     const newDicesArr = []
     for(let i=0; i<10; i++){
-      newDicesArr.push({value: Math.floor(Math.random()*6)+1, isHeld: false})
+      newDicesArr.push(generateNewDice())
     }
     return newDicesArr
   }
 
-  function setNewDices(){
-    setDiceNumbers(newDices())
+  function rollDice(){
+    setDiceNumbers(prevDiceNumbers => prevDiceNumbers.map(tile => {
+      return tile.isHeld ? tile : generateNewDice()
+    }))
+  }
+
+  function holdDice(tileId){
+    setDiceNumbers(prevDiceNumbers => prevDiceNumbers.map((tile, index) => {
+      return index === tileId ? {...tile, isHeld: !tile.isHeld} : tile
+    }))
   }
 
   const tileElements = diceNumbers.map((diceNum, index) => {
-    return <Tile key={index} value={diceNum.value} />
+    return <Tile key={index} value={diceNum.value} isHeld={diceNum.isHeld} holdDice={() => holdDice(index)}/>
   })
   
 
@@ -28,7 +40,7 @@ const [diceNumbers, setDiceNumbers] = useState(newDices())
       <div className="tile-container">
         {tileElements}
       </div>
-      <button className="roll-button" onClick={setNewDices}>Roll</button>
+      <button className="roll-button" onClick={rollDice}>Roll</button>
     </main>
   );
 }

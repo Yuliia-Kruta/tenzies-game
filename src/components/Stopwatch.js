@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect } from "react";
 
-const Stopwatch = () => {
+const Stopwatch = (props) => {
 
-    const [time, setTime] = useState(0)
-    const [isRunning, setIsRunning] = useState(false);
+    console.log("Stopwatch is rendered")
+
+    const time = props.gameTime
+    const isRunning = props.isGameRunning
+    const setTime = props.setTime
 
     useEffect(() => {
         let intervalId;
@@ -16,23 +19,12 @@ const Stopwatch = () => {
     const hours = Math.floor(time / 360000);
     const minutes = Math.floor((time % 360000) / 6000);
     const seconds = Math.floor((time % 6000) / 100);
-    const milliseconds = time % 100;
-
-    const startAndStop = () => {
-        setIsRunning(!isRunning);
-    };
-
-    const reset = () => {
-        setTime(0);
-    };
-    return (
-        <div className="stopwatch-container">
+//CSS!
+    return ( 
           <p className="stopwatch-time">
             {hours}:{minutes.toString().padStart(2, "0")}:
-            {seconds.toString().padStart(2, "0")}:
-            {milliseconds.toString().padStart(2, "0")}
+            {seconds.toString().padStart(2, "0")}
           </p>
-        </div>
       );
 }
  

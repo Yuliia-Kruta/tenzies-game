@@ -6,7 +6,7 @@ const Tile = (props) => {
 
 
     return ( 
-        <div className="tile" style={tileStyle} onClick={props.holdDice}>
+        <div className="tile" style={tileStyle} onClick={props.isGameRunning ? props.holdDice : props.highlightStartButton}>
             <h2 className="tile-number">{props.value}</h2>
         </div>
      );

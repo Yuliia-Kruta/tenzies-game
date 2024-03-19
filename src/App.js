@@ -6,7 +6,9 @@ import Confetti from 'react-confetti'
 function App() {
 
 const [diceNumbers, setDiceNumbers] = useState(newDices())
-const [game, setGame] = useState(false)
+const [gameWon, setGameWon] = useState(false)
+const [gameTime, setGameTime] = useState(localStorage.getItem("gameTime") || 0)
+const [gameRunning, setGameRunning] = useState(false)
 
   function generateNewDice(){
     return {value: Math.floor(Math.random()*6)+1, isHeld: false}
@@ -21,9 +23,8 @@ const [game, setGame] = useState(false)
   }
 
   function rollDice(){
-    if (game){
-      setGame(false)
-      setDiceNumbers(newDices())
+    if (gameWon){
+      startNewGame()
     }else{
       setDiceNumbers(prevDiceNumbers => prevDiceNumbers.map(tile => {
         return tile.isHeld ? tile : generateNewDice()
@@ -36,8 +37,18 @@ const [game, setGame] = useState(false)
     }))
   }
 
+  function startNewGame(){
+    setGameWon(false)
+    setGameRunning(true)
+    setDiceNumbers(newDices())
+  }
+
+  function highlightStartButton(){
+    console.log("Highlight")
+  }
+
   const tileElements = diceNumbers.map((diceNum, index) => {
-    return <Tile key={index} value={diceNum.value} isHeld={diceNum.isHeld} holdDice={() => holdDice(index)}/>
+    return <Tile key={index} value={diceNum.value} isHeld={diceNum.isHeld} holdDice={() => holdDice(index)} isGameRunning={gameRunning} highlightStartButton={highlightStartButton}/>
   })
 
   useEffect(() => {
@@ -45,19 +56,22 @@ const [game, setGame] = useState(false)
     const firstDice = diceNumbers[0].value
     const areAllSame = diceNumbers.every(tile => tile.value === firstDice)
     if(areAllHeld && areAllSame){
-      setGame(true)
+      setGameWon(true)
+      setGameRunning(false)
     }
   }, [diceNumbers])
 
   return(
     <main>
-      {game && <Confetti />}
-       <h1 className="title">Tenzies</h1>
+      {gameWon && <Confetti />}
+       <h1 className="title">Yuliia's Tenzies</h1>
           <p className="instructions">Roll until all dice are the same. Click each die to freeze it at its current value between rolls.</p>
+      <div>Count</div>
       <div className="tile-container">
         {tileElements}
       </div>
-      <button className="roll-button" onClick={rollDice}>{game ? "New game" : "Roll"}</button>
+      <div>Time</div>
+      <button className="roll-button" onClick={gameRunning ? rollDice : startNewGame}>{gameRunning ? "Roll" : "New game"}</button>
     </main>
   );
 }

@@ -11,6 +11,8 @@ const [gameRunning, setGameRunning] = useState(false)
 const [gameWon, setGameWon] = useState(false)
 const [gameTime, setGameTime] = useState(0)
 const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.getItem("bestGameTime")) || 0)
+const [count, setCount] = useState(0)
+const [bestCount, setBestCount] = useState(() => JSON.parse(localStorage.getItem("bestCount")) || 0)
 
 
   function generateNewDice(){
@@ -29,6 +31,7 @@ const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.g
     if (gameWon){
       startNewGame()
     }else{
+      setCount(prevCount => prevCount+1)
       setDiceNumbers(prevDiceNumbers => prevDiceNumbers.map(tile => {
         return tile.isHeld ? tile : generateNewDice()
     }))}
@@ -42,6 +45,7 @@ const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.g
 
   function startNewGame(){
     setGameTime(0)
+    setCount(0)
     setGameWon(false)
     setGameRunning(true)
     setDiceNumbers(newDices())
@@ -68,11 +72,12 @@ const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.g
     const areAllSame = diceNumbers.every(tile => tile.value === firstDice)
     if(areAllHeld && areAllSame){
       setGameWon(true)
-      console.log(gameTime)
       setBestGameTime(prevBestGameTime => {
         return gameTime < prevBestGameTime || prevBestGameTime===0 ? gameTime : prevBestGameTime
       })
-      console.log(bestGameTime)
+      setBestCount(prevBestCount => {
+        return count < prevBestCount || prevBestCount===0 ? count : prevBestCount
+      })
       setGameRunning(false)
     }
   }, [diceNumbers])
@@ -81,11 +86,15 @@ const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.g
     localStorage.setItem("bestGameTime", JSON.stringify(bestGameTime))
   }, [bestGameTime])
 
+  useEffect(() => {
+    localStorage.setItem("bestCount", JSON.stringify(bestCount))
+  }, [bestCount])
+
   return(
     <main>
       {gameWon && <Confetti />}
       <div className="header-container">
-        <div className="rect-container">Best count</div>
+        <div className="rect-container">Best count: {bestCount}</div>
         <h1 className="title">Yuliia's Tenzies</h1>
         <div className="rect-container">Best time: {formatTime(bestGameTime)}</div>
       </div>
@@ -93,7 +102,7 @@ const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.g
       <div className="game-section-container">
         <div className="circle-container">
           <h3>Count</h3>
-          <h3>her tn</h3>
+          <h3>{count}</h3>
         </div>
         <div className="tile-container">
           {tileElements}

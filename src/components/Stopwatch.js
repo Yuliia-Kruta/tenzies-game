@@ -14,7 +14,6 @@ const Stopwatch = (props) => {
         return () => clearInterval(intervalId);
     }, [isRunning, time]);
 
-  //CSS!
       return ( 
             <p className="stopwatch-time">
               {props.formatTime(time)}

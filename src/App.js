@@ -13,7 +13,7 @@ const [gameTime, setGameTime] = useState(0)
 const [bestGameTime, setBestGameTime] = useState(() => JSON.parse(localStorage.getItem("bestGameTime")) || 0)
 const [count, setCount] = useState(0)
 const [bestCount, setBestCount] = useState(() => JSON.parse(localStorage.getItem("bestCount")) || 0)
-
+const [rollButtonHighlighted, setRollButtonHighlighted] = useState(false)
 
   function generateNewDice(){
     return {value: Math.floor(Math.random()*6)+1, isHeld: false}
@@ -51,9 +51,6 @@ const [bestCount, setBestCount] = useState(() => JSON.parse(localStorage.getItem
     setDiceNumbers(newDices())
   }
 
-  function highlightStartButton(){
-    console.log("Highlight")
-  }
 
   function formatTime(time) {
     const hours = Math.floor(time / 360000);
@@ -61,9 +58,16 @@ const [bestCount, setBestCount] = useState(() => JSON.parse(localStorage.getItem
     const seconds = Math.floor((time % 6000) / 100);
     return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
+
+  function highlightRollButton(){
+    setRollButtonHighlighted(true);
+    setTimeout(() => {
+        setRollButtonHighlighted(false);
+    }, 1000); 
+}
   
   const tileElements = diceNumbers.map((diceNum, index) => {
-    return <Tile key={index} value={diceNum.value} isHeld={diceNum.isHeld} holdDice={() => holdDice(index)} isGameRunning={gameRunning} highlightStartButton={highlightStartButton}/>
+    return <Tile key={index} value={diceNum.value} isHeld={diceNum.isHeld} holdDice={() => holdDice(index)} isGameRunning={gameRunning} highlightRollButton={highlightRollButton}/>
   })
 
   useEffect(() => {
@@ -112,7 +116,7 @@ const [bestCount, setBestCount] = useState(() => JSON.parse(localStorage.getItem
           <Stopwatch gameTime={gameTime} isGameRunning={gameRunning} setTime={setGameTime} formatTime={formatTime}/>
         </div>
       </div>
-      <button className="roll-button" onClick={gameRunning ? rollDice : startNewGame}>{gameRunning ? "Roll" : "New game"}</button>
+      <button className={rollButtonHighlighted ? "roll-button highlighted" : "roll-button"} onClick={gameRunning ? rollDice : startNewGame}>{gameRunning ? "Roll" : "New game"}</button>
     </main>
   );
 }

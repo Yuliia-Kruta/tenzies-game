@@ -110,6 +110,11 @@ main {
   cursor: pointer;
 }
 
+.roll-button.highlighted{
+  box-shadow: 0px 0px 5px 2px #59E391;
+  border: 2px solid #59E391;
+}
+
 .roll-button:hover{
   background-color: #4a9efe;
 }
@@ -117,5 +122,3 @@ main {
 .roll-button:active{
   background-color: #70b1fc;
 }
-
-

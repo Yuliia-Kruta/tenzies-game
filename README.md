@@ -43,11 +43,11 @@ npm start
 The app will be available at http://localhost:3000.
 
 <h2>How to Play</h2>
-Click the "New game" button to start.
-Click the "Roll" button to roll the dice.
-Click on a die to hold its value.
-Continue rolling until all dice show the same number.
-Enjoy the confetti when you win!
+- Click the "New game" button to start.<br/>
+- Click the "Roll" button to roll the dice.<br/>
+- Click on a die to hold its value.<br/>
+- Continue rolling until all dice show the same number.<br/>
+- Enjoy the confetti when you win!
 
 <h2>License</h2>
 Distributed under the MIT License. See LICENSE for more information.
